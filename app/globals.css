@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f5f0;
+  --foreground: #283618;
+
+  --brand-paper: #faedcd;
+  --brand-ochre: #d4a373;
+  --brand-earth: #bc6c25;
+  --brand-dark: #283618;
+
+  --node-unvisited: #e7e5e4;
+  --node-wall: #606c38;
+  --node-visited: #d4a373;
+  --node-path: #bc6c25;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+  --font-roboto: var(--font-roboto), ui-serif;
+
+  --color-brand-beige: var(--background);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-ochre: var(--brand-ochre);
+  --color-brand-paper: var(--brand-paper);
+  --color-brand-earth: var(--brand-earth);
+  
+  --color-node-wall: var(--node-wall);
+  --color-node-visited: var(--node-visited);
+  --color-node-path: var(--node-path);
+}  
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1a1c15;
+    --foreground: #faedcd;
+
+    --brand-paper: #283618;
+    --brand-ochre: #bc6c25;
+    --brand-earth: #d4a373;
+    --brand-dark: #f5f5f0;
+
+    --node-unvisited: #2a2a24;
+    --node-wall: #12140e;
+    --node-visited: #5c442c;
+    --node-path: #d4a373;
+  }
+}
+
+
+@layer base{
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] font-sans transition-colors duration-300;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4{
+    @apply font-roboto;
+  }
+}
