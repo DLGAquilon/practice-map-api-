@@ -1,5 +1,6 @@
 import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,27 +28,47 @@ export default function RootLayout({ children }) {
             <h2 className="font-roboto font-bold text-2xl tracking-tight text-stone-800">
               PATH<span className="text-amber-700">FINDER</span>
             </h2>
-            <nav className="hidden md:flex gap-8 text-sm font-medium text-stone-600">
-              <a href="/" className="hover:text-amber-800 transition-colors">
+            <nav className="hidden md:flex gap-8 text-sm font-bold tracking-widest uppercase items-center">
+              <Link
+                href="/"
+                className="hover:text-brand-earth transition-colors"
+              >
                 Home
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/visualizer"
-                className="hover:text-amber-800 transition-colors"
+                className="px-4 py-2 bg-brand-dark text-brand-paper rounded hover:bg-brand-earth transition-all"
               >
                 Visualizer
-              </a>
+              </Link>
               <a
-                href="https://github.com"
-                className="hover:text-amber-800 transition-colors"
+                href="https://github.com/DLGAquilon/practice-map-api-.git"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-brand-earth transition-colors"
               >
                 Github
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.28 1.15-.28 2.35 0 3.5-.73 1.02-1.08 2.25-1 3.5 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                  <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                </svg>
               </a>
             </nav>
           </div>
         </header>
+
         {/* MAIN CONTENT */}
         <main className="grow">{children}</main>
+
         {/* FOOTER */}
         <footer className="border-t border-stone-200 bg-brand-dark text-stone-300 py-16">
           <div className="max-w-7xl mx-auto px-6">
@@ -79,7 +100,7 @@ export default function RootLayout({ children }) {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/logic#legend"
                       className="hover:text-brand-ochre transition-colors"
                     >
                       Legend & Symbols
@@ -112,7 +133,7 @@ export default function RootLayout({ children }) {
                 <ul className="space-y-2 text-sm">
                   <li>
                     <a
-                      href="#"
+                      href="/visualizer"
                       className="hover:text-brand-ochre transition-colors"
                     >
                       Dijkstra's (Current)
@@ -153,7 +174,7 @@ export default function RootLayout({ children }) {
                 <ul className="space-y-2 text-sm">
                   <li>
                     <a
-                      href="#"
+                      href="/logic"
                       className="hover:text-brand-ochre transition-colors"
                     >
                       Documentation
@@ -169,7 +190,7 @@ export default function RootLayout({ children }) {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="https://github.com/DLGAquilon/practice-map-api-.git"
                       className="hover:text-brand-ochre transition-colors"
                     >
                       GitHub Repository

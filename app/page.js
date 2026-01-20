@@ -44,7 +44,7 @@ export default function Home() {
             </Link>
             
             <Link 
-              href="#how-it-works"
+              href="/logic"
               className="text-sm font-bold tracking-widest uppercase border-b-2 border-brand-ochre pb-1 hover:text-brand-earth transition-colors"
             >
               Explore Logic
