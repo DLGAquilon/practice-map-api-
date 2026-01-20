@@ -1,32 +1,35 @@
+import { MinHeap } from './minHeap';
+
 export function dijkstra(grid, startNode, endNode) {
     const visitedNodesInOrder = [];
     startNode.distance = 0;
-    const unvisitedNodes = getAllNodes(grid);
 
-    while(!!unvisitedNodes.length) {
-        sortNodesByDistance(unvisitedNodes);
-        const closestNode = unvisitedNodes.shift();
+    const minHeap = new MinHeap();
+    minHeap.push(startNode);
 
+    while (minHeap.size() > 0) {
+        const closestNode = minHeap.pop();
         if (closestNode.isWall) continue;
         if (closestNode.distance === Infinity) return visitedNodesInOrder;
-
+        if (closestNode.isVisited) continue;
         closestNode.isVisited = true;
         visitedNodesInOrder.push(closestNode);
 
         if (closestNode === endNode) return visitedNodesInOrder;
-        updateUnvisitedNeighbors(closestNode, grid);
+        updateUnvisitedNeighbors(closestNode, grid, minHeap);
     }
+    return visitedNodesInOrder;
 }
-
-function sortNodesByDistance(unvisitedNodes) {
-    unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance); 
-}
-
-function updateUnvisitedNeighbors(node, grid) {
+    
+function updateUnvisitedNeighbors(node, grid, minHeap) {
     const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
     for (const neighbor of unvisitedNeighbors) { 
-        neighbor.distance = node.distance + 1;
-        neighbor.previousNode = node;
+        const newDistance = node.distance + 1;
+        if (newDistance < neighbor.distance) {
+            neighbor.distance = newDistance;
+            neighbor.previousNode = node;
+            minHeap.push(neighbor);
+        }
     }
 }
 
@@ -38,16 +41,6 @@ function getUnvisitedNeighbors(node, grid) {
     if (col > 0) neighbors.push(grid[row][col - 1]);
     if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
     return neighbors.filter(neighbor => !neighbor.isVisited);
-}
-
-function getAllNodes(grid) {
-    const nodes = [];
-    for (const row of grid) {
-        for (const node of row) {
-            nodes.push(node);
-        }
-    }
-    return nodes;
 }
 
 export function getNodesInShortestPathOrder(endNode) {

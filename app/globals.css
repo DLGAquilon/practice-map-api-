@@ -63,3 +63,7 @@
 html {
   scroll-behavior: smooth;
 }
+
+.bg-node-visited{
+  background-color: #bc6c25;
+}

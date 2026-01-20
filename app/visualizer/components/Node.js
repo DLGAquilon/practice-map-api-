@@ -1,30 +1,24 @@
 export default function Node({ node, onMouseEnter, onMouseDown }) {
-  const { isStart, isFinish, isWall, isVisited, isPath } = node;
+  const { row, col, isStart, isFinish, isWall } = node;
 
-  // Determine styling based on node state
-  const extraClassName = isFinish
-    ? 'bg-red-900 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]'
+  const stateClass = isFinish
+    ? "bg-red-900"
     : isStart
-    ? 'bg-brand-dark shadow-[0_0_15px_rgba(40,54,24,0.4)]'
+    ? "bg-brand-dark"
     : isWall
-    ? 'bg-node-wall border-none scale-95'
-    : isPath
-    ? 'bg-node-path'
-    : isVisited
-    ? 'bg-node-visited'
-    : 'bg-transparent';
+    ? "bg-node-wall"
+    : "bg-transparent";
 
   return (
     <div
-      id={`node-${node.row}-${node.col}`}
-      className={`w-[25px] h-[25px] border-[0.5px] border-brand-ochre/10 transition-all duration-300 ${extraClassName}`}
-      onMouseEnter={onMouseEnter}
+      // CRITICAL: This ID must match the one in animateDijkstra
+      id={`node-${row}-${col}`} 
       onMouseDown={onMouseDown}
+      onMouseEnter={onMouseEnter}
+      className={`w-[25px] h-[25px] border-[0.5px] border-brand-ochre/10 transition-all duration-300 ${stateClass}`}
     >
-      {/* Starting point indicator */}
-      {isStart && <div className="w-full h-full flex items-center justify-center text-[10px] text-white font-bold italic">S</div>}
-      {/* Finish point indicator */}
-      {isFinish && <div className="w-full h-full flex items-center justify-center text-[10px] text-white font-bold italic">F</div>}
+      {isStart && <div className="text-[10px] text-white text-center">S</div>}
+      {isFinish && <div className="text-[10px] text-white text-center">F</div>}
     </div>
   );
 }
