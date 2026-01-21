@@ -154,7 +154,7 @@ export default function RootLayout({ children }) {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href="/map-engine"
                         className="hover:text-brand-ochre transition-colors"
                       >
                         A* Search
