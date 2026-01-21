@@ -26,9 +26,12 @@ export default function RootLayout({ children }) {
         <GridProvider>
           <header className="border-b border-stone-200 bg-stone-100/50 backdrop-blur-md sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-              <h2 className="font-roboto font-bold text-2xl tracking-tight text-stone-800">
+              <Link
+                href="/"
+                className="font-roboto font-bold text-2xl tracking-tight text-stone-800"
+              >
                 PATH<span className="text-amber-700">FINDER</span>
-              </h2>
+              </Link>
               <nav className="hidden md:flex gap-8 text-sm font-bold tracking-widest uppercase items-center">
                 <Link
                   href="/"
@@ -41,6 +44,12 @@ export default function RootLayout({ children }) {
                   className="px-4 py-2 bg-brand-dark text-brand-paper rounded hover:bg-brand-earth transition-all"
                 >
                   Visualizer
+                </Link>
+                <Link
+                  href="/map-engine"
+                  className="px-4 py-2 bg-brand-earth text-brand-paper rounded hover:bg-brand-dark transition-all"
+                >
+                  Map Engine
                 </Link>
                 <a
                   href="https://github.com/DLGAquilon/practice-map-api-.git"
@@ -63,6 +72,9 @@ export default function RootLayout({ children }) {
                     <path d="M9 18c-4.51 2-5-2-7-2"></path>
                   </svg>
                 </a>
+                <Link href="/settings" className="hover:text-brand-earth transition-colors">
+                  Settings
+                </Link>
               </nav>
             </div>
           </header>

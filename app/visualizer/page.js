@@ -1,34 +1,42 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Node from "./components/Node"; // Ensure this path matches your file structure
-import { dijkstra, getNodesInShortestPathOrder } from "./algorithms/dijkstra";
-import { recursiveBactracker } from "./algorithms/maze";
-
-const GRID_ROWS = 20;
-const GRID_COLS = 40;
-
-const DEFAULT_START = { row: 10, col: 10 };
-const DEFAULT_END = { row: 10, col: 30 };
+import Node from "../../components/Node"; // Ensure this path matches your file structure
+import { dijkstra, getNodesInShortestPathOrder } from "../../algorithms/dijkstra";
+import { recursiveBactracker } from "../../algorithms/maze";
+import { useGrid } from "@/context/GridContext";
 
 export default function VisualizerPage() {
+  const { gridRows, gridCols, nodeSize, allowDiagonal } = useGrid();
   const [grid, setGrid] = useState([]);
   const [isMousePressed, setIsMousePressed] = useState(false);
-  const [startPos, setStartPos] = useState(DEFAULT_START);
-  const [endPos, setEndPos] = useState(DEFAULT_END);
+  const [startPos, setStartPos] = useState({ row: 1, col: 1 });
+  const [endPos, setEndPos] = useState({
+    row: gridRows - 2,
+    col: gridCols - 2,
+  });
 
   const [selectionMode, setSelectionMode] = useState("WALL"); // 'start' | 'end' | null
 
   useEffect(() => {
     const initialGrid = createInitialGrid();
     setGrid(initialGrid);
-  }, []);
+
+    setStartPos({
+      row: Math.floor(gridRows / 2),
+      col: Math.floor(gridCols / 4),
+    });
+    setEndPos({
+      row: Math.floor(gridRows / 2),
+      col: Math.floor((gridCols / 4) * 3),
+    });
+  }, [gridRows, gridCols]);
 
   const createInitialGrid = () => {
     const nodes = [];
-    for (let row = 0; row < GRID_ROWS; row++) {
+    for (let row = 0; row < gridRows; row++) {
       const currentRow = [];
-      for (let col = 0; col < GRID_COLS; col++) {
+      for (let col = 0; col < gridCols; col++) {
         currentRow.push(createNode(row, col));
       }
       nodes.push(currentRow);
@@ -91,6 +99,23 @@ export default function VisualizerPage() {
     setGrid([...mazeGrid]);
   };
 
+  const clearGrid = () => {
+    const initialGrid = createInitialGrid(); // This uses the current gridRows/gridCols from context
+    setGrid(initialGrid);
+
+    // Clean up any CSS animation classes manually if needed
+    grid.forEach((row) => {
+      row.forEach((node) => {
+        const el = document.getElementById(`node-${node.row}-${node.col}`);
+        if (el) {
+          // Reset to original node class
+          el.className =
+            "border-[0.5px] border-brand-ochre/10 transition-all duration-300 bg-transparent";
+          el.style.backgroundColor = ""; // Clear the shortest path color
+        }
+      });
+    });
+  };
   const visualizeDijkstra = () => {
     const currentGrid = grid.map((row) =>
       row.map((node) => ({
@@ -104,20 +129,26 @@ export default function VisualizerPage() {
     // Use currentGrid here, NOT the state 'grid'
     const startNode = currentGrid[startPos.row][startPos.col];
     const finishNode = currentGrid[endPos.row][endPos.col];
-    
+
     // Pass currentGrid to the algorithm
-    const visitedNodesInOrder = dijkstra(currentGrid, startNode, finishNode);
+    const visitedNodesInOrder = dijkstra(
+      currentGrid,
+      startNode,
+      finishNode,
+      allowDiagonal,
+    );
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
 
     // Update state so the logic knows the grid has been "cleaned"
-    setGrid(currentGrid); 
+    setGrid(currentGrid);
 
     if (!visitedNodesInOrder || visitedNodesInOrder.length <= 1) {
       alert("No path found!");
       return;
     }
     animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
-};
+  };
+
   const animateDijkstra = (visitedNodesInOrder, nodesInShortestPathOrder) => {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
@@ -133,10 +164,12 @@ export default function VisualizerPage() {
           `node-${node.row}-${node.col}`,
         );
 
-        // DEBUG: If this logs null, your IDs are wrong!
         if (nodeElement && !node.isStart && !node.isFinish) {
+          // Dynamic width/height based on context
+          nodeElement.style.width = `${nodeSize}px`;
+          nodeElement.style.height = `${nodeSize}px`;
           nodeElement.className =
-            "w-[25px] h-[25px] border-[0.5px] border-brand-ochre/10 transition-all duration-500 bg-node-visited scale-110";
+            "border-[0.5px] border-brand-ochre/10 transition-all duration-500 bg-node-visited scale-110";
         }
       }, 10 * i);
     }
@@ -173,10 +206,10 @@ export default function VisualizerPage() {
             Run Dijkstra
           </button>
           <button
-            onClick={() => window.location.reload()}
+            onClick={clearGrid}
             className="px-4 py-2 border border-stone-500 text-stone-300 font-bold rounded hover:bg-stone-800 transition-colors text-xs uppercase tracking-widest"
           >
-            Reset
+            Clear Board
           </button>
           <button
             onClick={generateMaze}
@@ -214,7 +247,8 @@ export default function VisualizerPage() {
         className="grid border-[1px] border-brand-dark/20 shadow-2xl bg-white/50 backdrop-blur-sm"
         onMouseDown={() => setIsMousePressed(true)}
         onMouseUp={() => setIsMousePressed(false)}
-        style={{ gridTemplateColumns: `repeat(${GRID_COLS}, 25px)` }}
+        // USE nodeSize AND gridCols FROM CONTEXT
+        style={{ gridTemplateColumns: `repeat(${gridCols}, ${nodeSize}px)` }}
       >
         {grid.map((row, rowIdx) => (
           <React.Fragment key={rowIdx}>
